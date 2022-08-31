@@ -4,11 +4,13 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 
 import com.orhanobut.hawk.Hawk;
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
     List<Sticker> mStickers;
     ArrayList<StickerModel> stickerModels = new ArrayList<>();
     RecyclerView recyclerView;
-    List<String> mEmojis,mDownloadFiles;
+    List<String> mEmojis, mDownloadFiles;
     String android_play_store_link;
     Toolbar toolbar;
 
@@ -55,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
         mDownloadFiles = new ArrayList<>();
         mEmojis.add("");
         adapter = new StickerAdapter(this, stickerPacks);
-        getPermissions();
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
         String root = path + "/" + identifier;
         File myDir = new File(root + "/" + "try");
         myDir.mkdirs();
-        String fname = name.replace(".png","").replace(" ","_") + ".png";
+        String fname = name.replace(".png", "").replace(" ", "_") + ".png";
         File file = new File(myDir, fname);
         if (file.exists()) file.delete();
         try {
@@ -105,18 +106,6 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
         }
     }
 
-    private void getPermissions() {
-        int perm = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (perm != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    this,
-                    PERMISSIONS,
-                    1
-            );
-        }
-    }
 
     @Override
     public void onListLoaded(String jsonResult, boolean jsonSwitch) {
@@ -134,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
                                 jsonChildNode.getString("identifier"),
                                 jsonChildNode.getString("name"),
                                 jsonChildNode.getString("publisher"),
-                                getLastBitFromUrl(jsonChildNode.getString("tray_image_file")).replace(" ","_"),
+                                getLastBitFromUrl(jsonChildNode.getString("tray_image_file")).replace(" ", "_"),
                                 jsonChildNode.getString("publisher_email"),
                                 jsonChildNode.getString("publisher_website"),
                                 jsonChildNode.getString("privacy_policy_website"),
@@ -145,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
                         for (int j = 0; j < stickers.length(); j++) {
                             JSONObject jsonStickersChildNode = stickers.getJSONObject(j);
                             mStickers.add(new Sticker(
-                                    getLastBitFromUrl(jsonStickersChildNode.getString("image_file")).replace(".png",".webp"),
+                                    getLastBitFromUrl(jsonStickersChildNode.getString("image_file")).replace(".png", ".webp"),
                                     mEmojis
                             ));
                             mDownloadFiles.add(jsonStickersChildNode.getString("image_file"));
@@ -153,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
                         Log.d(TAG, "onListLoaded: " + mStickers.size());
                         Hawk.put(jsonChildNode.getString("identifier"), mStickers);
                         stickerPacks.get(i).setAndroidPlayStoreLink(android_play_store_link);
-                        stickerPacks.get(i).setStickers(Hawk.get(jsonChildNode.getString("identifier"),new ArrayList<Sticker>()));
+                        stickerPacks.get(i).setStickers(Hawk.get(jsonChildNode.getString("identifier"), new ArrayList<Sticker>()));
                         /*stickerModels.add(new StickerModel(
                                 jsonChildNode.getString("name"),
                                 mStickers.get(0).imageFileName,

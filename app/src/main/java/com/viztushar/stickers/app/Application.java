@@ -1,6 +1,6 @@
 package com.viztushar.stickers.app;
 
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDexApplication;
 
 import com.orhanobut.hawk.Hawk;
 
